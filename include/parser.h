@@ -34,7 +34,7 @@ public:
         OperatorPrecedence[">="] = 10;
         OperatorPrecedence["=="] = 10;
         OperatorPrecedence["!="] = 10;
-        OperatorPrecedence["<=>"] = 10;
+        OperatorPrecedence["<>"] = 100;
     }
     void parse();
     unique_ptr<::Type> getType();
