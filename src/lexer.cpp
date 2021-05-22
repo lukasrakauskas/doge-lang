@@ -41,8 +41,16 @@ int Lexer::getToken()
         return (tmp = peekOneAhead('+',token_increment)) ? tmp : token_add_sym;
     if (curChar == '=')
         return (tmp = peekOneAhead('=', token_equal_to)) ? tmp : token_assignment_op;
-    if (curChar == '<')
-        return (tmp = peekOneAhead('=', token_less_than_eq)) ? tmp : token_less_then;
+    if (curChar == '<') {
+        if (source.peek() == '>') {
+            source.get();
+            return token_spaceship;
+        } else if (source.peek() == '=') {
+            source.get();
+            return token_less_than_eq;
+        } 
+        return token_less_then;
+    }
     if (curChar == '>')
         return (tmp = peekOneAhead('=', token_greater_than_eq)) ? tmp : token_greater_then;
     if (curChar == '!')

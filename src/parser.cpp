@@ -107,12 +107,8 @@ unique_ptr<Expression> Parser::ParsePrimary()
         return ParseDoubleNum();
     if (lexer.isTokenTrueValue() || lexer.isTokenFalseValue())
         return ParseBooleanValue();
-    if (lexer.isTokenIdentifier()){
+    if (lexer.isTokenIdentifier())
         return ParseIdentifier();
-    }
-    if (lexer.isTokenSpaceship()){
-        return ParseSpaceship();
-    }
     if (lexer.isTokenLeftParen())
         return ParseParen();
     else
@@ -224,23 +220,6 @@ unique_ptr<Expression> Parser::ParseBooleanValue()
     return nullptr;
 }
 
-unique_ptr<Expression> Parser::ParseSpaceship()
-{
-    if (lexer.isTokenTrueValue())
-    {
-        lexer.getNextToken();
-        return make_unique<Boolean>(true);
-    }
-    
-    else if (lexer.isTokenFalseValue())
-    {
-        lexer.getNextToken();
-        return make_unique<Boolean>(false);
-    }
-    return nullptr;
-}
-
-
 unique_ptr<Expression> Parser::ParseParen()
 {
     lexer.getNextToken();
@@ -318,7 +297,7 @@ int Parser::getOperatorPrecedence()
     else if (lexer.isTokenGreaterThanEq())
         return OperatorPrecedence[">="];
     else if (lexer.isTokenSpaceship())
-        return OperatorPrecedence["<=>"];
+        return OperatorPrecedence["<>"];
     else if (lexer.isTokenEqualTo())
         return OperatorPrecedence["=="];
     else if (lexer.isTokenNotEqualTo())
