@@ -1,0 +1,44 @@
+
+consume fn printint(int n) void;
+
+
+int a[10] = [55,98,67,23,1088,65,44,34,1,7];
+
+fn sortA() void {
+    int max;
+    int index;
+    int temp;
+    for(int i = 9; i >= 0; i = i - 1){
+        max = a[0];
+        index = 0;
+        for(int j = 1; j <= i; j = j + 1){
+            if(max < a[j]){
+                max = a[j];
+                index = j;
+            }
+        }
+        temp = a[i];
+        a[i] = max;
+        a[index] = temp;
+    }
+    return;
+}
+
+fn binarySearchA(int l,int t,int r) int {
+    int m;
+    if(l <= r){
+        m = (l + r) / 2;
+        if(a[m] < t){  return binarySearchA(m+1,t,r);  }
+        else {
+            if(a[m] > t){  return binarySearchA(l,t,m-1);  }
+            else{ return m; }
+        }
+    }
+    return 101;
+}
+
+fn start() void {
+    sortA();
+    printint(binarySearchA(0,7,9));
+    return;
+}
