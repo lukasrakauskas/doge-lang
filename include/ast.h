@@ -776,4 +776,16 @@ namespace AST
         }
         void codegen() override;
     };
+
+    class WhileStatement : public Statement
+    {
+        unique_ptr<Expression> cond;
+        unique_ptr<CompoundStatement> compoundStatement;
+
+    public:
+        WhileStatement(unique_ptr<Expression> cond, unique_ptr<CompoundStatement> compoundStatement) : cond(move(cond)), compoundStatement(move(compoundStatement))
+        {
+        }
+        void codegen() override;
+    };
 } // namespace AST

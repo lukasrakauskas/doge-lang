@@ -398,6 +398,8 @@ unique_ptr<Statement> Parser::ParseStatement()
         return ParseIfElseStatement();
     if (lexer.isTokenFor())
         return ParseForStatement();
+    if (lexer.isTokenWhile())
+        return ParseWhileStatement();
     LogError("Unknown statement!");
     return nullptr;
 }
@@ -810,6 +812,36 @@ unique_ptr<Statement> Parser::ParseForStatement()
     return make_unique<ForStatement>(move(lvd), move(va), move(cond), move(vastep), move(cmpStat));
 }
 
+unique_ptr<Statement> Parser::ParseWhileStatement()
+{
+    lexer.getNextToken();
+    if (!lexer.isTokenLeftParen())
+    {
+        LogError("Expected a '(' in 'while'");
+        return nullptr;
+    }
+
+    lexer.getNextToken();
+    auto cond = ParseExpression();
+    if (!cond || !cond->getType()->isBool())
+    {
+        LogError("Illegal condition in 'while'");
+        return nullptr;
+    }
+
+    if (!lexer.isTokenRightParen())
+    {
+        LogError("Expected a ')' in 'while'");
+        return nullptr;
+    }
+
+    lexer.getNextToken();
+    auto cmpStat = ParseCompoundStatement();
+    if (!cmpStat)
+        return nullptr;
+    return make_unique<WhileStatement>(move(cond), move(cmpStat));
+}
+
 unique_ptr<FunctionSignature> Parser::ParseConsume()
 {
     lexer.getNextToken();
@@ -837,6 +869,7 @@ unique_ptr<FunctionSignature> Parser::ParseFunctionSignature()
         LogError("Expected an Identifier");
         return nullptr;
     }
+
     string Name = lexer.getIdentifier();
     if (FunctionTable.find(Name) != FunctionTable.end())
     {
@@ -897,6 +930,7 @@ unique_ptr<FunctionSignature> Parser::ParseFunctionSignature()
         LogError("Incomplete Type Specification in Function Declaration");
         return nullptr;
     }
+
     unique_ptr<::Type> type = getType();
     currentFuncType = type.get();
     FunctionTable[Name] = make_pair(move(argType), move(type->getNew()));

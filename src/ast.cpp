@@ -287,6 +287,21 @@ void ForStatement::codegen()
     cg->builder->SetInsertPoint(AfterLoopBB);
 }
 
+void WhileStatement::codegen()
+{
+    BasicBlock *bb = cg->builder->GetInsertBlock();
+    Function *func = bb->getParent();
+    BasicBlock *LoopBB = BasicBlock::Create(*(cg->context), "loop", func);
+    BasicBlock *AfterLoopBB = BasicBlock::Create(*(cg->context), "afterloop", func);
+    llvm::Value *condition = cond->codeGen();
+    cg->builder->CreateCondBr(condition, LoopBB, AfterLoopBB);
+    cg->builder->SetInsertPoint(LoopBB);
+    compoundStatement->codegen();
+    condition = cond->codeGen();
+    cg->builder->CreateCondBr(condition, LoopBB, AfterLoopBB);
+    cg->builder->SetInsertPoint(AfterLoopBB);
+}
+
 void BinaryExpression::VarDecCodeGen(GlobalVariable *gVar, ::Type *vt)
 {
     gVar->setInitializer(vt->getDefaultConstant());

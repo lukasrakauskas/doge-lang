@@ -47,6 +47,7 @@ public:
     std::unique_ptr<CompoundStatement> ParseCompoundStatement();
     std::unique_ptr<Statement> ParseIfElseStatement();
     std::unique_ptr<Statement> ParseForStatement();
+    std::unique_ptr<Statement> ParseWhileStatement();
     std::unique_ptr<AST::Expression> ParsePrimary();
     std::unique_ptr<FunctionSignature> ParseConsume();
     std::unique_ptr<AST::Expression> ParseCallExpression(const string &);
