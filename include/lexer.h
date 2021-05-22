@@ -47,7 +47,8 @@ class Lexer
         token_increment = -38,
         token_decrement = -39,
         token_not = -40,
-        token_while = -41
+        token_while = -41,
+        token_spaceship = -42
     };
     map<string, token> KeywordRegistry;
     map<char, token> SymbolRegistry;
@@ -121,6 +122,7 @@ public:
     bool isTokenLessThan() { return currentToken == token_less_then; }
     bool isTokenGreaterThan() { return currentToken == token_greater_then; }
     bool isTokenLessThanEq() { return currentToken == token_less_than_eq; }
+    bool isTokenSpaceship() { return currentToken == token_spaceship; }
     bool isTokenGreaterThanEq() { return currentToken == token_greater_than_eq; }
     bool isTokenEqualTo() { return currentToken == token_equal_to; }
     bool isTokenIf() { return currentToken == token_if; }
