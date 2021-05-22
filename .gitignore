@@ -37,4 +37,4 @@ Makefile
 CMakeFiles/*
 doge
 main
-vscode/*
+.vscode/*
