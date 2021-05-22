@@ -46,7 +46,8 @@ class Lexer
         token_right_square_brack = -37,
         token_increment = -38,
         token_decrement = -39,
-        token_not = -40
+        token_not = -40,
+        token_while = -41
     };
     map<string, token> KeywordRegistry;
     map<char, token> SymbolRegistry;
@@ -69,6 +70,7 @@ public:
         KeywordRegistry["if"] = token_if;
         KeywordRegistry["else"] = token_else;
         KeywordRegistry["for"] = token_for;
+        KeywordRegistry["while"] = token_while;
         KeywordRegistry["consume"] = token_consume;
         KeywordRegistry["bool"] = token_boolean;
         KeywordRegistry["true"] = token_true;
@@ -124,6 +126,7 @@ public:
     bool isTokenIf() { return currentToken == token_if; }
     bool isTokenElse() { return currentToken == token_else; }
     bool isTokenFor() { return currentToken == token_for; }
+    bool isTokenWhile() { return currentToken == token_while; }
     bool isTokenNotEqualTo() { return currentToken == token_not_equal_to; }
     bool isTokenComma() { return currentToken == token_comma; }
     bool isTokenBoolean() { return currentToken == token_boolean; }
