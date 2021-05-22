@@ -269,6 +269,39 @@ namespace AST
         unique_ptr<::Type> getOperatorEvalTy() override { return make_unique<Bool>(); }
     };
 
+    class OpSpaceShip : public BinOps
+    {
+        llvm::Value *codeGen(llvm::Value *lhs, llvm::Value *rhs) override
+        {
+            if (operand_type->isInt())
+                return codeGenInt(lhs, rhs);
+            else if (operand_type->isDouble())
+                return codeGenDouble(lhs, rhs);
+            return nullptr;
+        }
+
+        llvm::Value *codeGenInt(llvm::Value *lhs, llvm::Value *rhs)
+        {
+            return cg->builder->CreateICmpSLE(lhs, rhs, "lecmpi");
+        }
+
+        llvm::Value *codeGenDouble(llvm::Value *lhs, llvm::Value *rhs)
+        {
+            return cg->builder->CreateFCmpULE(lhs, rhs, "lecmpd");
+        }
+
+        bool validOperandSet(::Type *t1) override
+        {
+            bool c = (t1->isInt() || t1->isDouble());
+            if (c)
+                operand_type = t1->getNew();
+            return c;
+        }
+
+        unique_ptr<::Type> getOperatorEvalTy() override { return make_unique<Int>(); }
+    };
+
+
     class OpGreaterThanEq : public BinOps
     {
 

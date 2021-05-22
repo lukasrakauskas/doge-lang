@@ -34,6 +34,7 @@ public:
         OperatorPrecedence[">="] = 10;
         OperatorPrecedence["=="] = 10;
         OperatorPrecedence["!="] = 10;
+        OperatorPrecedence["<=>"] = 10;
     }
     void parse();
     unique_ptr<::Type> getType();
@@ -54,6 +55,7 @@ public:
     std::unique_ptr<AST::Expression> ParseVariable(const string &);
     std::unique_ptr<AST::Expression> ParseIntNum();
     unique_ptr<Expression> ParseBooleanValue();
+    unique_ptr<Expression> ParseSpaceship();
     std::unique_ptr<AST::Expression> ParseIdentifier();
     std::unique_ptr<AST::Expression> ParseDoubleNum();
     std::unique_ptr<AST::Expression> ParseBinOP(int, unique_ptr<Expression>);
@@ -72,5 +74,5 @@ public:
     bool isExpression() { return (lexer.isTokenIntNum() || lexer.isTokenDoubleNum() ||
                                   lexer.isTokenIdentifier() || lexer.isTokenLeftParen()) ||
                                  lexer.isTokenTrueValue() ||
-                                 lexer.isTokenFalseValue(); }
+                                 lexer.isTokenFalseValue();}
 };
