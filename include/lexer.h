@@ -49,8 +49,9 @@ class Lexer
         token_not = -40,
         token_while = -41,
         token_spaceship = -42,
-        token_string = -43,
-        token_double_quotes = -44
+        token_string_literal = -43,
+        token_double_quotes = -44,
+        token_string_type = -45
     };
     map<string, token> KeywordRegistry;
     map<char, token> SymbolRegistry;
@@ -79,7 +80,7 @@ public:
         KeywordRegistry["bool"] = token_boolean;
         KeywordRegistry["true"] = token_true;
         KeywordRegistry["false"] = token_false;
-        KeywordRegistry["string"] = token_string;
+        KeywordRegistry["string"] = token_string_type;
         SymbolRegistry[';'] = token_semi_colon;
         SymbolRegistry['*'] = token_mul_sym;
         SymbolRegistry['/'] = token_div_sym;
@@ -147,6 +148,7 @@ public:
     bool isTokenIncrement() { return currentToken == token_increment; }
     bool isTokenDecrement() { return currentToken == token_decrement; }
     bool isTokenNot() { return currentToken == token_not; }
-    bool isTokenString() { return currentToken == token_string; }
+    bool isTokenStringType() { return currentToken == token_string_type; }
     bool isTokenDoubleQuotes() { return currentToken == token_double_quotes; }
+    bool isTokenStringLiteral() { return currentToken == token_string_literal; }
 };

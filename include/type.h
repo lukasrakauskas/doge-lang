@@ -146,7 +146,6 @@ public:
     }
     llvm::AllocaInst *allocateLLVMVariable(const string &Name) override
     {
-
         return new AllocaInst(getLLVMType(), 0, 0, Align(16), Name.c_str(), cg->builder->GetInsertBlock());
     }
     unique_ptr<::Type> getNew() override { return make_unique<Array>(num, ofType->getNew()); }
@@ -176,65 +175,29 @@ public:
 
 class String : public ::Type
 {
-    unique_ptr<::Type> ofType = make_unique<Int>();
-    int num;
-
 public:
-    String(int num) : num(num) {}
+    String() {}
+    llvm::Type *getLLVMType() override
+    {
+        //return llvm::Type::get;
+        //return llvm::ArrayType(llvm::Type::getInt8Ty(*cg->context), 10); // TODO: Make length dynamic
+        return llvm::Type::getInt8PtrTy(*cg->context);
+    }
     bool isString() override { return true; }
-    MaybeAlign getAllignment() override { return MaybeAlign(16); }
-    llvm::ArrayType *getLLVMType() override { return ArrayType::get(ofType->getLLVMType(), num); }
+    bool doesMatch(Type *t) override { return t->isString(); }
+    unique_ptr<::Type> getNew() override { return make_unique<String>(); }
     llvm::Constant *getDefaultConstant() override
     {
-        vector<Constant *> values;
-        for (int i = 0; i < num; i++)
-        {
-            values.push_back(ofType->getDefaultConstant());
-        }
-        return ConstantArray::get(getLLVMType(), values);
-    };
-    ::Type *getOfType() { return ofType.get(); }
-    bool doesMatch(Type *t) override
-    {
-        if (t->isString())
-        {
-            String *atype = static_cast<String *>(t);
-            return ofType->doesMatch(atype->getOfType());
-        }
-        return false;
+        return cg->builder->CreateGlobalStringPtr(StringRef(""));
     }
-    bool doesMatchElement(Type *t)
+    llvm::Constant *getConstant(int v) override
     {
-        return ofType->doesMatch(t);
+        return cg->builder->CreateGlobalStringPtr(StringRef(to_string(v)));
     }
-    llvm::AllocaInst *allocateLLVMVariable(const string &Name) override
-    {
-
-        return new AllocaInst(getLLVMType(), 0, 0, Align(16), Name.c_str(), cg->builder->GetInsertBlock());
-    }
-    unique_ptr<::Type> getNew() override { return make_unique<String>(num, ofType->getNew()); }
-
-    virtual void createWrite(llvm::Value *e, llvm::Value *v, llvm::Value *dest) override
-    {
-        Value *Idxs[] = {
-            ConstantInt::get(llvm::Type::getInt32Ty(*(cg->context)), 0),
-            e};
-        llvm::Value *gep = cg->builder->CreateInBoundsGEP(dyn_cast<llvm::Type>(getLLVMType()), dest, Idxs);
-        ofType->createWrite(0, v, gep);
-    }
-
-    virtual llvm::Value *createLoad(llvm::Value *e, llvm::Value *v, const string &name) override
-    {
-        Value *Idxs[] = {
-            ConstantInt::get(llvm::Type::getInt32Ty(*(cg->context)), 0),
-            e};
-        llvm::Value *gep = cg->builder->CreateInBoundsGEP(dyn_cast<llvm::Type>(getLLVMType()), v, Idxs);
-        return cg->builder->CreateAlignedLoad(gep, getAllignment(), name + "arrayidx");
-    }
-    void CreateLLVMRet(llvm::Value * v) override {  }
-    llvm::Constant *getConstant(int v) override { return nullptr; }
-    llvm::Value* createAdd(llvm::Value* v,int v1) override { return nullptr; };
-    llvm::Value* createSub(llvm::Value* v,int v1) override { return nullptr; };
+    llvm::AllocaInst *allocateLLVMVariable(const string &Name) override { return cg->builder->CreateAlloca(getLLVMType(), 0, Name.c_str()); }
+    llvm::Value* createAdd(llvm::Value* v,int v1) override { return nullptr; }
+    llvm::Value* createSub(llvm::Value* v,int v1) override { return nullptr; }
+    llvm::Value* createNeg(llvm::Value* v) override { return nullptr; }
 };
 
 #endif

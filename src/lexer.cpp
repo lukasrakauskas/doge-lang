@@ -23,7 +23,7 @@ int Lexer::getToken()
             curChar = source.get();
         }
         curChar = source.get();
-        return token_string;
+        return token_string_literal;
     }    
 
     if (isdigit(curChar))

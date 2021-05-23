@@ -9,7 +9,7 @@ void Parser::parse()
     lexer.getNextToken();
     while (true)
     {
-        if (lexer.isTokenInt() || lexer.isTokenDouble() || lexer.isTokenBoolean() || lexer.isTokenString())
+        if (lexer.isTokenInt() || lexer.isTokenDouble() || lexer.isTokenBoolean() || lexer.isTokenStringType())
             ParseVariableDeclarationStatement()->codegen();
         else if (lexer.isTokenFunctionKeyword())
             ParseFunctionDefinition()->codeGen();

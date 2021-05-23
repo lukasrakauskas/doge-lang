@@ -532,18 +532,18 @@ namespace AST
         void VarDecCodeGen(GlobalVariable *, ::Type *) override;
     };
 
-    class StringVal : public Value
-    {
-        vector<unique_ptr<Expression>> ofVals;
+    // class StringVal : public Value
+    // {
+    //     vector<unique_ptr<Expression>> ofVals;
 
-    public:
-        StringVal(vector<unique_ptr<IntNum>> ofVals, int size) : ofVals(move(ofVals)), Value(make_unique<Array>(size, make_unique<IntNum>()))
-        {
-        }
-        llvm::Value *codeGen() override;
-        void gen(llvm::Value *);
-        void VarDecCodeGen(GlobalVariable *, ::Type *) override;
-    };
+    // public:
+    //     StringVal(vector<unique_ptr<IntNum>> ofVals, int size) : ofVals(move(ofVals)), Value(make_unique<Array>(size, make_unique<IntNum>()))
+    //     {
+    //     }
+    //     llvm::Value *codeGen() override;
+    //     void gen(llvm::Value *);
+    //     void VarDecCodeGen(GlobalVariable *, ::Type *) override;
+    // };
 
     class Variable : public Expression
     {
