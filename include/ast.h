@@ -1,7 +1,6 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include <iostream>
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Constants.h"
@@ -283,9 +282,6 @@ namespace AST
 
         llvm::Value *codeGenInt(llvm::Value *lhs, llvm::Value *rhs)
         {
-            //TODO: naudoti callus i c extern palyginimui kaip abv getfunction
-
-
             Value *one = ConstantInt::get(operand_type->getLLVMType(), 1, true);
             Value *zero = ConstantInt::get(operand_type->getLLVMType(), 0, true);
             Value *minus_one = ConstantInt::get(operand_type->getLLVMType(), (uint64_t)-1, true);
@@ -293,31 +289,24 @@ namespace AST
             int newLhs;
             int newRhs;
 
-            std::cout << "Spaceship <> wow" << std::endl;
             if (ConstantInt* CI = dyn_cast<ConstantInt>(lhs)) {
                 if (CI->getBitWidth() <= 32) {
                     newLhs = CI->getSExtValue();
                 } else {
-                    std::cout << "Pepega 1" << std::endl;
                     return nullptr;
                 }
             } else {
-                std::cout << "Pepega 2" << std::endl;
                 return nullptr;
             }
             if (ConstantInt* CI = dyn_cast<ConstantInt>(rhs)) {
                 if (CI->getBitWidth() <= 32) {
                     newRhs = CI->getSExtValue();
                 } else {
-                    std::cout << "Pepega 3" << std::endl;
                     return nullptr;
                 }
             } else {
-                std::cout << "Pepega 4" << std::endl;
                 return nullptr;
             }
-
-            
 
             if (newLhs > newRhs) {
                 return one;

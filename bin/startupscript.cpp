@@ -20,15 +20,6 @@ extern "C" void nextLine()
     putchar('\n');
 }
 
-extern "C" int spaceship(int lhs, int rhs)
-{
-    if (newLhs > newRhs)
-        return 1;
-    else if (newLhs < newRhs)
-        return -1;
-    return 0;
-}
-
 int main()
 {
     start();
