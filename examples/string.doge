@@ -1,9 +1,0 @@
-consume fn printint(int n) void;
-consume fn printstr(string str) void;
-
-fn start() void {
-    string a = "aadasdaddasd";
-    printint(1);
-    printstr(a);
-    return;
-}

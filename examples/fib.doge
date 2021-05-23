@@ -1,0 +1,43 @@
+
+imclude do woof_int(imteger n) wow;
+imclude do woof_str(strimg n) wow;
+
+do fib_rec(imteger n) imteger
+{
+    hmm (n <= 1){
+        gib n;
+    }
+    gib fib_rec(n-1) + fib_rec(n-2);
+}
+
+do fib_iter(imteger n) imteger
+{
+    imteger size = n + 2;
+
+    imteger f[11];
+
+    imteger i;
+
+    f[0] = 0;
+    f[1] = 1;
+ 
+    very(i = 2; i <= n; i = i + 1)
+    {
+        imteger first_index = i - 1;
+        imteger second_index = i - 2;
+        f[i] = f[first_index] + f[second_index];
+    }
+
+    gib f[n];
+}
+
+do start() wow {
+    strimg cheemz = "Hello world im doge such nice wow";
+    strimg ch = "Hello wh nice wow";
+    
+    imteger resulmt = fib_iter(9);
+
+    woof_int(resulmt);
+
+    gib;
+}
