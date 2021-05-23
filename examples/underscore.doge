@@ -1,0 +1,12 @@
+imclude do woofInt(imteger n) wow;
+imclude do woofStr(strimg n) wow;
+
+do start() wow {
+    strimg _test = "1";
+    strimg test_ = "2";
+    
+    woofStr(_test);
+    woofStr(test_);
+
+    gib;
+}

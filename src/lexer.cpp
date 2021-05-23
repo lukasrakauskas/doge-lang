@@ -32,7 +32,7 @@ int Lexer::getToken()
         NumberString += curChar;
         return extractNumber();
     }
-    if (isalpha(curChar))
+    if (isalpha(curChar) || curChar == '_')
     {
         Identifier = "";
         Identifier += curChar;
@@ -99,7 +99,7 @@ int Lexer::extractIdentifier()
 {
     char curChar;
     char dummy = source.peek();
-    while (isalnum(dummy))
+    while (isalnum(dummy) || dummy == '_')
     {
         source.get(curChar);
         Identifier += curChar;
