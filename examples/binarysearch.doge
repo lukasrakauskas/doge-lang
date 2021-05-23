@@ -38,7 +38,8 @@ fn binarySearchA(int l,int t,int r) int {
 }
 
 fn start() void {
-    sortA();
-    printint(binarySearchA(0,7,9));
+    printint(1 <> 2);
+    printint(2 <> 1);
+    printint(1 <> 1);
     return;
 }

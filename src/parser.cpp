@@ -107,10 +107,8 @@ unique_ptr<Expression> Parser::ParsePrimary()
         return ParseDoubleNum();
     if (lexer.isTokenTrueValue() || lexer.isTokenFalseValue())
         return ParseBooleanValue();
-    if (lexer.isTokenIdentifier()){
+    if (lexer.isTokenIdentifier())
         return ParseIdentifier();
-    }
-        
     if (lexer.isTokenLeftParen())
         return ParseParen();
     else
@@ -262,6 +260,8 @@ unique_ptr<BinOps> Parser::returnBinOpsType()
         return make_unique<OpLessThan>();
     else if (lexer.isTokenLessThanEq())
         return make_unique<OpLessThanEq>();
+    else if (lexer.isTokenSpaceship())
+        return make_unique<OpSpaceShip>(); // LMAOO
     else if (lexer.isTokenGreaterThan())
         return make_unique<OpGreaterThan>();
     else if (lexer.isTokenGreaterThanEq())
@@ -296,6 +296,8 @@ int Parser::getOperatorPrecedence()
         return OperatorPrecedence[">"];
     else if (lexer.isTokenGreaterThanEq())
         return OperatorPrecedence[">="];
+    else if (lexer.isTokenSpaceship())
+        return OperatorPrecedence["<>"];
     else if (lexer.isTokenEqualTo())
         return OperatorPrecedence["=="];
     else if (lexer.isTokenNotEqualTo())
@@ -328,7 +330,7 @@ unique_ptr<Expression> Parser::ParseBinOP(int minPrec, unique_ptr<Expression> lv
         }
         if (!BinOp->validOperandSet(ltype))
         {
-            LogError("Type of Operands given to Operator is Illeagal");
+            LogError("Type of Operands given to Operator is Illegal");
             return nullptr;
         }
         if (prevPrec < getOperatorPrecedence())

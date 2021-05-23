@@ -269,6 +269,71 @@ namespace AST
         unique_ptr<::Type> getOperatorEvalTy() override { return make_unique<Bool>(); }
     };
 
+    class OpSpaceShip : public BinOps
+    {
+        llvm::Value *codeGen(llvm::Value *lhs, llvm::Value *rhs) override
+        {
+            if (operand_type->isInt())
+                return codeGenInt(lhs, rhs);
+            else if (operand_type->isDouble())
+                return codeGenDouble(lhs, rhs);
+            return nullptr;
+        }
+
+        llvm::Value *codeGenInt(llvm::Value *lhs, llvm::Value *rhs)
+        {
+            Value *one = ConstantInt::get(operand_type->getLLVMType(), 1, true);
+            Value *zero = ConstantInt::get(operand_type->getLLVMType(), 0, true);
+            Value *minus_one = ConstantInt::get(operand_type->getLLVMType(), (uint64_t)-1, true);
+
+            int newLhs;
+            int newRhs;
+
+            if (ConstantInt* CI = dyn_cast<ConstantInt>(lhs)) {
+                if (CI->getBitWidth() <= 32) {
+                    newLhs = CI->getSExtValue();
+                } else {
+                    return nullptr;
+                }
+            } else {
+                return nullptr;
+            }
+            if (ConstantInt* CI = dyn_cast<ConstantInt>(rhs)) {
+                if (CI->getBitWidth() <= 32) {
+                    newRhs = CI->getSExtValue();
+                } else {
+                    return nullptr;
+                }
+            } else {
+                return nullptr;
+            }
+
+            if (newLhs > newRhs) {
+                return one;
+            }
+            if (newLhs < newRhs) {
+                return minus_one;
+            } 
+            return zero;
+        }
+
+        llvm::Value *codeGenDouble(llvm::Value *lhs, llvm::Value *rhs)
+        {
+            return cg->builder->CreateFCmpULE(lhs, rhs, "lecmpd");
+        }
+
+        bool validOperandSet(::Type *t1) override
+        {
+            bool c = (t1->isInt() || t1->isDouble());
+            if (c)
+                operand_type = t1->getNew();
+            return c;
+        }
+
+        unique_ptr<::Type> getOperatorEvalTy() override { return make_unique<Int>(); }
+    };
+
+
     class OpGreaterThanEq : public BinOps
     {
 
