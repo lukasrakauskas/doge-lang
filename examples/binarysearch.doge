@@ -1,45 +1,43 @@
 
-consume fn printint(int n) void;
+imclude do woofInt(imteger n) wow;
+imclude do woofStr(strimg n) wow;
 
-
-int a[10] = [55,98,67,23,1088,65,44,34,1,7];
-
-fn sortA() void {
-    int max;
-    int index;
-    int temp;
-    for(int i = 9; i >= 0; i = i - 1){
-        max = a[0];
-        index = 0;
-        for(int j = 1; j <= i; j = j + 1){
-            if(max < a[j]){
-                max = a[j];
-                index = j;
-            }
-        }
-        temp = a[i];
-        a[i] = max;
-        a[index] = temp;
+do fibRecursive(imteger n) imteger
+{
+    hmm (n <= 1){
+        gib n;
     }
-    return;
+    gib fibRecursive(n-1) + fibRecursive(n-2);
 }
 
-fn binarySearchA(int l,int t,int r) int {
-    int m;
-    if(l <= r){
-        m = (l + r) / 2;
-        if(a[m] < t){  return binarySearchA(m+1,t,r);  }
-        else {
-            if(a[m] > t){  return binarySearchA(l,t,m-1);  }
-            else{ return m; }
-        }
+do fibIterative(imteger n) imteger
+{
+    imteger size = n + 2;
+
+    imteger f[11];
+
+    imteger i;
+
+    f[0] = 0;
+    f[1] = 1;
+ 
+    very(i = 2; i <= n; i = i + 1)
+    {
+        imteger firstIndex = i - 1;
+        imteger secondIndex = i - 2;
+       f[i] = f[firstIndex] + f[secondIndex];
     }
-    return 101;
+
+    gib f[n];
 }
 
-fn start() void {
-    printint(1 <> 2);
-    printint(2 <> 1);
-    printint(1 <> 1);
-    return;
+do start() wow {
+    strimg cheemz = "Hello world im doge such nice wow";
+    strimg ch = "Hello wh nice wow";
+    
+    imteger resulmt = fibIterative(9);
+
+    woofInt(resulmt);
+
+    gib;
 }
