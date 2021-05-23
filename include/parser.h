@@ -41,6 +41,7 @@ public:
     int getOperatorPrecedence();
     unique_ptr<BinOps> returnBinOpsType();
     unique_ptr<Expression> ParseArrayElemExpression(const string &);
+    std::unique_ptr<AST::Expression> ParseString();
     std::unique_ptr<AST::Expression> ParseExpression();
     std::unique_ptr<AST::Expression> ParseParen();
     std::unique_ptr<AST::Statement> ParseStatement();

@@ -20,6 +20,11 @@ extern "C" void nextLine()
     putchar('\n');
 }
 
+extern "C" void printstr(char* string)
+{
+    puts(string);
+}
+
 int main()
 {
     start();

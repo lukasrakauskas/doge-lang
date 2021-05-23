@@ -23,6 +23,7 @@ public:
     virtual bool isVoid() { return false; }
     virtual bool isBool() { return false; }
     virtual bool isArray() { return false; }
+    virtual bool isString() { return false; }
     virtual unique_ptr<::Type> getNew() = 0;
     virtual MaybeAlign getAllignment() { return MaybeAlign(4); }
     virtual llvm::Constant *getDefaultConstant() = 0;
@@ -145,7 +146,6 @@ public:
     }
     llvm::AllocaInst *allocateLLVMVariable(const string &Name) override
     {
-
         return new AllocaInst(getLLVMType(), 0, 0, Align(16), Name.c_str(), cg->builder->GetInsertBlock());
     }
     unique_ptr<::Type> getNew() override { return make_unique<Array>(num, ofType->getNew()); }
@@ -171,6 +171,33 @@ public:
     llvm::Constant *getConstant(int v) override { return nullptr; }
     llvm::Value* createAdd(llvm::Value* v,int v1) override { return nullptr; };
     llvm::Value* createSub(llvm::Value* v,int v1) override { return nullptr; };
+};
+
+class StringType : public ::Type
+{
+public:
+    StringType() {}
+    llvm::Type *getLLVMType() override
+    {
+        //return llvm::Type::get;
+        //return llvm::ArrayType(llvm::Type::getInt8Ty(*cg->context), 10); // TODO: Make length dynamic
+        return llvm::Type::getInt8PtrTy(*cg->context);
+    }
+    bool isString() override { return true; }
+    bool doesMatch(Type *t) override { return t->isString(); }
+    unique_ptr<::Type> getNew() override { return make_unique<StringType>(); }
+    llvm::Constant *getDefaultConstant() override
+    {
+        return cg->builder->CreateGlobalStringPtr(StringRef(""));
+    }
+    llvm::Constant *getConstant(int v) override
+    {
+        return cg->builder->CreateGlobalStringPtr(StringRef(to_string(v)));
+    }
+    llvm::AllocaInst *allocateLLVMVariable(const string &Name) override { return cg->builder->CreateAlloca(getLLVMType(), 0, Name.c_str()); }
+    llvm::Value* createAdd(llvm::Value* v,int v1) override { return nullptr; }
+    llvm::Value* createSub(llvm::Value* v,int v1) override { return nullptr; }
+    llvm::Value* createNeg(llvm::Value* v) override { return nullptr; }
 };
 
 #endif

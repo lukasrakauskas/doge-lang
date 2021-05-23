@@ -492,6 +492,22 @@ namespace AST
         virtual bool isValue() override { return true; }
     };
 
+    class StringVal : public Value
+    {
+        string String;
+
+    protected:
+        CodeGen *cg;
+
+    public:
+        StringVal(string String) 
+        : String(String), Value(make_unique<StringType>())
+        {
+            cg = CodeGen::GetInstance();
+        }
+        llvm::Value *codeGen() override { return cg->builder->CreateGlobalStringPtr(StringRef(String)); }
+    };
+    
     class IntNum : public Value
     {
         int Number;
@@ -531,6 +547,19 @@ namespace AST
         void gen(llvm::Value *);
         void VarDecCodeGen(GlobalVariable *, ::Type *) override;
     };
+
+    // class StringVal : public Value
+    // {
+    //     vector<unique_ptr<Expression>> ofVals;
+
+    // public:
+    //     StringVal(vector<unique_ptr<IntNum>> ofVals, int size) : ofVals(move(ofVals)), Value(make_unique<Array>(size, make_unique<IntNum>()))
+    //     {
+    //     }
+    //     llvm::Value *codeGen() override;
+    //     void gen(llvm::Value *);
+    //     void VarDecCodeGen(GlobalVariable *, ::Type *) override;
+    // };
 
     class Variable : public Expression
     {

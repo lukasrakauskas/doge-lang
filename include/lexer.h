@@ -48,7 +48,10 @@ class Lexer
         token_decrement = -39,
         token_not = -40,
         token_while = -41,
-        token_spaceship = -42
+        token_spaceship = -42,
+        token_string_literal = -43,
+        token_double_quotes = -44,
+        token_string_type = -45
     };
     map<string, token> KeywordRegistry;
     map<char, token> SymbolRegistry;
@@ -59,6 +62,7 @@ class Lexer
     string NumberString;
     string Identifier;
     int currentToken;
+    string ParsedStringValue;
 public:
     Lexer(string name) : sourceName(name)
     {
@@ -76,6 +80,7 @@ public:
         KeywordRegistry["bool"] = token_boolean;
         KeywordRegistry["true"] = token_true;
         KeywordRegistry["false"] = token_false;
+        KeywordRegistry["string"] = token_string_type;
         SymbolRegistry[';'] = token_semi_colon;
         SymbolRegistry['*'] = token_mul_sym;
         SymbolRegistry['/'] = token_div_sym;
@@ -88,6 +93,7 @@ public:
         SymbolRegistry['|'] = token_vertical_line;
         SymbolRegistry['['] = token_left_square_brack;
         SymbolRegistry[']'] = token_right_square_brack;
+        SymbolRegistry['"'] = token_double_quotes;
     }
     int getToken();
     int extractIdentifier();
@@ -98,6 +104,7 @@ public:
     string getIdentifier() { return Identifier.c_str(); }
     int getNextToken() { return (currentToken = getToken()); }
     int getCurrentToken() { return currentToken; };
+    string getParsedStringValue() { return ParsedStringValue; }
     void closeFile() { source.close(); }
     bool isTokenInt() { return currentToken == token_int; }
     bool isTokenDouble() { return currentToken == token_double; }
@@ -113,7 +120,7 @@ public:
     bool isTokenDivSym() { return currentToken == token_div_sym; }
     bool isTokenLeftParen() { return currentToken == token_left_paren; }
     bool isTokenRightParen() { return currentToken == token_right_paren; }
-    bool isAnyType() { return (isTokenInt() || isTokenDouble() || isTokenVoid() || isTokenBoolean()); }
+    bool isAnyType() { return (isTokenInt() || isTokenDouble() || isTokenVoid() || isTokenBoolean() || isTokenStringType()); }
     bool isTokenLeftCurlyBrace() { return currentToken == token_left_curly_brac; }
     bool isTokenRightCurlyBrace() { return currentToken == token_right_curly_brac; }
     bool isTokenFunctionKeyword() { return currentToken == token_fn; }
@@ -141,4 +148,7 @@ public:
     bool isTokenIncrement() { return currentToken == token_increment; }
     bool isTokenDecrement() { return currentToken == token_decrement; }
     bool isTokenNot() { return currentToken == token_not; }
+    bool isTokenStringType() { return currentToken == token_string_type; }
+    bool isTokenDoubleQuotes() { return currentToken == token_double_quotes; }
+    bool isTokenStringLiteral() { return currentToken == token_string_literal; }
 };
