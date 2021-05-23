@@ -5,6 +5,16 @@ int Lexer::getToken()
     char curChar = ' ';
 
     while (isspace(curChar) && !source.eof()) source.get(curChar);
+    
+    if (curChar == '\"'){
+        ParsedStringValue = "";
+        curChar = source.get();
+        while (curChar != '\"' && curChar != EOF) {
+            ParsedStringValue += curChar;
+            curChar = source.get();
+        }
+        return token_string_literal;
+    }    
         
     if (curChar == '#')
     {
@@ -15,16 +25,6 @@ int Lexer::getToken()
         return getToken();
     }
 
-    if (curChar == '\"'){
-        ParsedStringValue = "";
-        curChar = source.get();
-        while (curChar != '\"' && curChar != EOF) {
-            ParsedStringValue += curChar;
-            curChar = source.get();
-        }
-        curChar = source.get();
-        return token_string_literal;
-    }    
 
     if (isdigit(curChar))
     {

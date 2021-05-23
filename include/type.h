@@ -173,10 +173,10 @@ public:
     llvm::Value* createSub(llvm::Value* v,int v1) override { return nullptr; };
 };
 
-class String : public ::Type
+class StringType : public ::Type
 {
 public:
-    String() {}
+    StringType() {}
     llvm::Type *getLLVMType() override
     {
         //return llvm::Type::get;
@@ -185,7 +185,7 @@ public:
     }
     bool isString() override { return true; }
     bool doesMatch(Type *t) override { return t->isString(); }
-    unique_ptr<::Type> getNew() override { return make_unique<String>(); }
+    unique_ptr<::Type> getNew() override { return make_unique<StringType>(); }
     llvm::Constant *getDefaultConstant() override
     {
         return cg->builder->CreateGlobalStringPtr(StringRef(""));

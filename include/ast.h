@@ -491,6 +491,22 @@ namespace AST
         virtual void VarDecCodeGen(GlobalVariable *, ::Type *) override;
         virtual bool isValue() override { return true; }
     };
+
+    class StringVal : public Value
+    {
+        string String;
+
+    protected:
+        CodeGen *cg;
+
+    public:
+        StringVal(string String) 
+        : String(String), Value(make_unique<StringType>())
+        {
+            cg = CodeGen::GetInstance();
+        }
+        llvm::Value *codeGen() override { return cg->builder->CreateGlobalStringPtr(StringRef(String)); }
+    };
     
     class IntNum : public Value
     {

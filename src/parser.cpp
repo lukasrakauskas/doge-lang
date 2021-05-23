@@ -27,69 +27,83 @@ void Parser::parse()
     }
 }
 
-unique_ptr<Expression> Parser::ParsePreUnary(){
+unique_ptr<Expression> Parser::ParsePreUnary()
+{
     bool flag = false;
     unique_ptr<UnOps> unop;
-    if(lexer.isTokenIncrement()){
-        
+    if (lexer.isTokenIncrement())
+    {
+
         unop = make_unique<AddPreIncrement>();
         flag = true;
     }
-    else if(lexer.isTokenDecrement()){
+    else if (lexer.isTokenDecrement())
+    {
         unop = make_unique<SubPreIncrement>();
         flag = true;
-    }else if(lexer.isTokenNot()){
+    }
+    else if (lexer.isTokenNot())
+    {
         unop = make_unique<PreNot>();
         flag = true;
-    }else if(lexer.isTokenSubSym()){
+    }
+    else if (lexer.isTokenSubSym())
+    {
         unop = make_unique<Neg>();
         flag = true;
     }
 
-    if(flag){
+    if (flag)
+    {
         lexer.getNextToken();
         auto e = ParsePrimary();
-        if(!e){
+        if (!e)
+        {
             LogError("Invalid use of operator");
         }
-        if(!unop->validOperandSet(e.get())){
+        if (!unop->validOperandSet(e.get()))
+        {
             LogError("Cannot Apply operator to this type");
             return nullptr;
         }
-        
+
         auto ty = unop->getOperatorEvalTy();
-       
-        return make_unique<UnaryExpression>(move(unop),move(e),move(ty));
+
+        return make_unique<UnaryExpression>(move(unop), move(e), move(ty));
     }
 
     return ParsePrimary();
 }
 
-unique_ptr<Expression> Parser::ParsePostUnary(unique_ptr<Expression> e){
+unique_ptr<Expression> Parser::ParsePostUnary(unique_ptr<Expression> e)
+{
     bool flag = false;
     unique_ptr<UnOps> unop;
-    if(lexer.isTokenIncrement()){
+    if (lexer.isTokenIncrement())
+    {
         unop = make_unique<AddPostIncrement>();
         flag = true;
     }
-    else if(lexer.isTokenDecrement()){
+    else if (lexer.isTokenDecrement())
+    {
         unop = make_unique<SubPostIncrement>();
         flag = true;
     }
 
-    if(flag){
-        if(!unop->validOperandSet(e.get())){
+    if (flag)
+    {
+        if (!unop->validOperandSet(e.get()))
+        {
             LogError("Cannot Apply operator to non-variable element");
             return nullptr;
         }
         lexer.getNextToken();
         auto ty = unop->getOperatorEvalTy();
-        return make_unique<UnaryExpression>(move(unop),move(e),move(ty));
+        return make_unique<UnaryExpression>(move(unop), move(e), move(ty));
     }
 
     return move(e);
 }
-
 
 unique_ptr<Expression> Parser::ParseExpression()
 {
@@ -101,6 +115,8 @@ unique_ptr<Expression> Parser::ParseExpression()
 
 unique_ptr<Expression> Parser::ParsePrimary()
 {
+    if (lexer.isTokenStringLiteral())
+        return ParseString();
     if (lexer.isTokenIntNum())
         return ParseIntNum();
     if (lexer.isTokenDoubleNum())
@@ -111,8 +127,6 @@ unique_ptr<Expression> Parser::ParsePrimary()
         return ParseIdentifier();
     if (lexer.isTokenLeftParen())
         return ParseParen();
-    if (lexer.isTokenDoubleQuotes())
-        return ParseString();
     else
     {
         LogError("Unknown Expression!");
@@ -120,10 +134,11 @@ unique_ptr<Expression> Parser::ParsePrimary()
     }
 }
 
-unique_ptr<Expression> Parser::ParseString() 
+unique_ptr<Expression> Parser::ParseString()
 {
     lexer.getNextToken();
-    return make_unique<String>(lexer.getParsedStringValue());
+    std::cout << lexer.getParsedStringValue() << std::endl;
+    return make_unique<StringVal>(lexer.getParsedStringValue());
 }
 
 unique_ptr<Expression> Parser::ParseVariable(const string &Name)
@@ -251,6 +266,8 @@ unique_ptr<::Type> Parser::getType()
         return make_unique<Void>();
     if (lexer.isTokenBoolean())
         return make_unique<Bool>();
+    if (lexer.isTokenStringType())
+        return make_unique<StringType>();
     return nullptr;
 }
 
@@ -400,7 +417,7 @@ unique_ptr<Statement> Parser::ParseStatement()
 {
     if (lexer.isTokenIdentifier())
         return ParseStatementIdentifier();
-    if (lexer.isTokenInt() || lexer.isTokenDouble() || lexer.isTokenBoolean())
+    if (lexer.isTokenInt() || lexer.isTokenDouble() || lexer.isTokenBoolean() || lexer.isTokenStringType())
         return ParseVariableDeclarationStatement();
     if (lexer.isTokenReturnKeyword())
         return ParseReturnStatement();
@@ -620,11 +637,11 @@ unique_ptr<Statement> Parser::ParseVariableDeclarationStatement()
         }
         if (!(ty->doesMatch(exp->getType())))
         {
-
             LogError("Type Mismatch in Variable Declaration");
             return nullptr;
         }
     }
+
     if (!lexer.isTokenSemiColon())
     {
         LogError("Expected ';' or '='");
@@ -680,16 +697,17 @@ unique_ptr<Statement> Parser::ParseIfElseStatement()
     if (!CmpStat)
         return nullptr;
     lexer.getNextToken();
-    if(lexer.isTokenElse()){
+    if (lexer.isTokenElse())
+    {
         lexer.getNextToken();
         auto elseCmpStat = ParseCompoundStatement();
         if (!elseCmpStat)
             return nullptr;
-        auto rt =  make_unique<IfElseStatement>(move(Exp), move(CmpStat), move(elseCmpStat));
+        auto rt = make_unique<IfElseStatement>(move(Exp), move(CmpStat), move(elseCmpStat));
         rt->peekedOneAhead(false);
         return move(rt);
     }
-    auto rt = make_unique<IfElseStatement>(move(Exp),move(CmpStat), nullptr);
+    auto rt = make_unique<IfElseStatement>(move(Exp), move(CmpStat), nullptr);
     rt->peekedOneAhead(true);
     return move(rt);
 }
@@ -959,11 +977,13 @@ unique_ptr<CompoundStatement> Parser::ParseCompoundStatement()
     while (!lexer.isTokenRightCurlyBrace())
     {
         auto stat = ParseStatement();
-        if(!stat){
+        if (!stat)
+        {
             LogError("Statement might be Missing '}'");
             return nullptr;
         }
-        if(!stat->didPeekOneAhead()) lexer.getNextToken();
+        if (!stat->didPeekOneAhead())
+            lexer.getNextToken();
         statements.push_back(move(stat));
     }
     return make_unique<CompoundStatement>(move(statements));

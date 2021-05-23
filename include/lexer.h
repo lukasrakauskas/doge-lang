@@ -120,7 +120,7 @@ public:
     bool isTokenDivSym() { return currentToken == token_div_sym; }
     bool isTokenLeftParen() { return currentToken == token_left_paren; }
     bool isTokenRightParen() { return currentToken == token_right_paren; }
-    bool isAnyType() { return (isTokenInt() || isTokenDouble() || isTokenVoid() || isTokenBoolean()); }
+    bool isAnyType() { return (isTokenInt() || isTokenDouble() || isTokenVoid() || isTokenBoolean() || isTokenStringType()); }
     bool isTokenLeftCurlyBrace() { return currentToken == token_left_curly_brac; }
     bool isTokenRightCurlyBrace() { return currentToken == token_right_curly_brac; }
     bool isTokenFunctionKeyword() { return currentToken == token_fn; }
