@@ -5,22 +5,22 @@ extern "C"
     void start();
 }
 
-extern "C" void printchar(int ascii)
+extern "C" void woofChar(int ascii)
 {
     putchar((char)ascii);
 }
 
-extern "C" void printint(int val)
+extern "C" void woofInt(int val)
 {
     printf("%d\n", val);
 }
 
-extern "C" void nextLine()
+extern "C" void nextLime()
 {
     putchar('\n');
 }
 
-extern "C" void printstr(char* string)
+extern "C" void woofStr(char* string)
 {
     puts(string);
 }

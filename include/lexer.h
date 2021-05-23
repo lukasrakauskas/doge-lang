@@ -67,20 +67,20 @@ public:
     Lexer(string name) : sourceName(name)
     {
         source.open(sourceName);
-        KeywordRegistry["int"] = token_int;
-        KeywordRegistry["double"] = token_double;
-        KeywordRegistry["void"] = token_void;
-        KeywordRegistry["fn"] = token_fn;
-        KeywordRegistry["return"] = token_return;
-        KeywordRegistry["if"] = token_if;
-        KeywordRegistry["else"] = token_else;
-        KeywordRegistry["for"] = token_for;
-        KeywordRegistry["while"] = token_while;
-        KeywordRegistry["consume"] = token_consume;
-        KeywordRegistry["bool"] = token_boolean;
-        KeywordRegistry["true"] = token_true;
-        KeywordRegistry["false"] = token_false;
-        KeywordRegistry["string"] = token_string_type;
+        KeywordRegistry["imteger"] = token_int; // int
+        KeywordRegistry["floamt"] = token_double; // double
+        KeywordRegistry["wow"] = token_void; // void
+        KeywordRegistry["do"] = token_fn; // fn
+        KeywordRegistry["gib"] = token_return; // return
+        KeywordRegistry["hmm"] = token_if; // if
+        KeywordRegistry["else"] = token_else; // else
+        KeywordRegistry["very"] = token_for; // for
+        KeywordRegistry["such"] = token_while; // while
+        KeywordRegistry["imclude"] = token_consume; // consume
+        KeywordRegistry["bool"] = token_boolean; // bool
+        KeywordRegistry["good"] = token_true; // true
+        KeywordRegistry["bad"] = token_false; // false
+        KeywordRegistry["strimg"] = token_string_type; // string
         SymbolRegistry[';'] = token_semi_colon;
         SymbolRegistry['*'] = token_mul_sym;
         SymbolRegistry['/'] = token_div_sym;
