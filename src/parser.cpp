@@ -137,7 +137,6 @@ unique_ptr<Expression> Parser::ParsePrimary()
 unique_ptr<Expression> Parser::ParseString()
 {
     lexer.getNextToken();
-    std::cout << lexer.getParsedStringValue() << std::endl;
     return make_unique<StringVal>(lexer.getParsedStringValue());
 }
 
