@@ -1,9 +1,0 @@
-
-consume fn print(int n) void;
-
-
-fn start() void {
-    bool i = 10 == 5;
-
-    return;
-}
