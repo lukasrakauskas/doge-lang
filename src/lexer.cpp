@@ -15,6 +15,17 @@ int Lexer::getToken()
         return getToken();
     }
 
+    if (curChar == '\"'){
+        ParsedStringValue = "";
+        curChar = source.get();
+        while (curChar != '\"' && curChar != EOF) {
+            ParsedStringValue += curChar;
+            curChar = source.get();
+        }
+        curChar = source.get();
+        return token_string;
+    }    
+
     if (isdigit(curChar))
     {
         NumberString = "";

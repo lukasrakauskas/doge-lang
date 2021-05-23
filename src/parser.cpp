@@ -9,7 +9,7 @@ void Parser::parse()
     lexer.getNextToken();
     while (true)
     {
-        if (lexer.isTokenInt() || lexer.isTokenDouble() || lexer.isTokenBoolean())
+        if (lexer.isTokenInt() || lexer.isTokenDouble() || lexer.isTokenBoolean() || lexer.isTokenString())
             ParseVariableDeclarationStatement()->codegen();
         else if (lexer.isTokenFunctionKeyword())
             ParseFunctionDefinition()->codeGen();
@@ -111,11 +111,19 @@ unique_ptr<Expression> Parser::ParsePrimary()
         return ParseIdentifier();
     if (lexer.isTokenLeftParen())
         return ParseParen();
+    if (lexer.isTokenDoubleQuotes())
+        return ParseString();
     else
     {
         LogError("Unknown Expression!");
         return nullptr;
     }
+}
+
+unique_ptr<Expression> Parser::ParseString() 
+{
+    lexer.getNextToken();
+    return make_unique<String>(lexer.getParsedStringValue());
 }
 
 unique_ptr<Expression> Parser::ParseVariable(const string &Name)

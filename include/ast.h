@@ -491,7 +491,7 @@ namespace AST
         virtual void VarDecCodeGen(GlobalVariable *, ::Type *) override;
         virtual bool isValue() override { return true; }
     };
-
+    
     class IntNum : public Value
     {
         int Number;
@@ -525,6 +525,19 @@ namespace AST
 
     public:
         ArrayVal(vector<unique_ptr<Expression>> ofVals, unique_ptr<::Type> type, int size) : ofVals(move(ofVals)), Value(make_unique<Array>(size, move(type)))
+        {
+        }
+        llvm::Value *codeGen() override;
+        void gen(llvm::Value *);
+        void VarDecCodeGen(GlobalVariable *, ::Type *) override;
+    };
+
+    class StringVal : public Value
+    {
+        vector<unique_ptr<Expression>> ofVals;
+
+    public:
+        StringVal(vector<unique_ptr<IntNum>> ofVals, int size) : ofVals(move(ofVals)), Value(make_unique<Array>(size, make_unique<IntNum>()))
         {
         }
         llvm::Value *codeGen() override;
