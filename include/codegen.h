@@ -14,7 +14,7 @@ class CodeGen{
     static CodeGen* obj;
     CodeGen() {
         context = make_unique<LLVMContext>();
-        module = make_unique<Module>("boson", *context);
+        module = make_unique<Module>("doge", *context);
         builder = make_unique<IRBuilder<>>(*context);
         funcType = FunctionType::get(builder->getVoidTy(), false);
         bin_func = Function::Create(funcType, Function::InternalLinkage, "op_func", *module);
