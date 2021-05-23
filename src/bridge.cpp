@@ -107,6 +107,6 @@ int main(int argc, char **argv)
     bridge.startCompilation();
     bridge.verifyIR();
     bridge.createObjFile();
-    printf("Successfully Compiled");
+    printf("Successfully Compiled\n");
     return 0;
 }
