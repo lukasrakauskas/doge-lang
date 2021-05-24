@@ -10,34 +10,29 @@ do fib_rec(imteger n) imteger
     gib fib_rec(n-1) + fib_rec(n-2);
 }
 
-do fib_iter(imteger n) imteger
-{
-    imteger size = n + 2;
+do fib_iter(imteger n) imteger {
+   imteger x = 0;
+   imteger y = 1;
+   imteger z = 0;
 
-    imteger f[11];
-
-    imteger i;
-
-    f[0] = 0;
-    f[1] = 1;
- 
-    very(i = 2; i <= n; i = i + 1)
-    {
-        imteger first_index = i - 1;
-        imteger second_index = i - 2;
-        f[i] = f[first_index] + f[second_index];
-    }
-
-    gib f[n];
+   imteger i;
+   very (i = 0; i < n; i = i + 1) {
+      z = x + y;
+      x = y;
+      y = z;
+   }
+   gib x;
 }
 
 do start() wow {
     strimg cheemz = "Hello world im doge such nice wow";
     strimg ch = "Hello wh nice wow";
     
-    imteger resulmt = fib_iter(9);
+    imteger resulmt = fib_iter(5);
+    imteger rec_resulmt = fib_rec(5);
 
     woof_int(resulmt);
+    woof_int(rec_resulmt);
 
     gib;
 }
