@@ -1,0 +1,46 @@
+imclude do woof_int(imteger n) wow;
+imclude do woof_float(floamt n) wow;
+imclude do woof_bool(bool n) wow;
+
+do test_spaceship() wow 
+{
+    imteger resulmt = 6 <> 9;
+    imteger another_resulmt = 6 <> 6;
+    imteger one_more_resulmt =  9 <> 6;
+
+    woof_int(resulmt);
+    woof_int(another_resulmt);
+    woof_int(one_more_resulmt);
+
+    gib;
+}
+
+do test_such() wow 
+{
+    floamt such_resulmt = 0.0;
+
+    imteger counmter = 0; 
+    
+    such (counmter < 10) 
+    {
+        woof_float(such_resulmt);
+        such_resulmt = such_resulmt + 0.5;
+        counmter = counmter + 1;
+    }
+    gib;
+}
+
+do test_bool() bool
+{
+    bool this_good = good;
+    bool this_bad = bad;
+    gib this_good & this_bad;
+}
+
+do start() wow {
+    #test_spaceship();
+    #test_such();
+    bool resulmt = test_bool();
+    woof_bool(resulmt);
+    gib;
+}
